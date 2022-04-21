@@ -436,7 +436,8 @@ export default class DiffImpl {
                     let member = MetadataFiles.getMemberNameFromFilepath(filePath, name);
                     if (name === METADATA_INFO.CustomField.xmlName) {
                         let isFormular = await DiffUtil.isFormulaField(filePaths[i]);
-                        if (isFormular) {
+                        //put formula fields into same destructive package
+                        if (isFormular && false) {
                             this.destructivePackageObjPre = this.buildDestructiveTypeObj(
                                 this.destructivePackageObjPre,
                                 name,
@@ -491,6 +492,13 @@ export default class DiffImpl {
                         } else {
                             //add the component in the manual action list
                             // TODO
+                            this.resultOutput.push({
+                                action: 'Delete',
+                                componentName: member,
+                                metadataType: name,
+                                message: '',
+                                path: 'Manual Intervention Required - Record Types',
+                            });
                         }
                     }
                 }
