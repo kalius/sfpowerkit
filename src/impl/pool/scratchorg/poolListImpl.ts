@@ -18,7 +18,9 @@ export default class PoolListImpl {
     }
 
     public async execute(): Promise<ScratchOrg[]> {
-        await ScratchOrgUtils.checkForNewVersionCompatible(this.hubOrg);
+
+        await ScratchOrgUtils.checkForPreRequisite(this.hubOrg);
+
         const results = (await ScratchOrgUtils.getScratchOrgsByTag(
             this.tag,
             this.hubOrg,
@@ -40,10 +42,7 @@ export default class PoolListImpl {
                 soDetail.expiryDate = element.ExpirationDate;
                 if (element.Allocation_status__c === 'Assigned') {
                     soDetail.status = 'In use';
-                } else if (
-                    (ScratchOrgUtils.isNewVersionCompatible && element.Allocation_status__c === 'Available') ||
-                    (!ScratchOrgUtils.isNewVersionCompatible && !element.Allocation_status__c)
-                ) {
+                } else if (element.Allocation_status__c === 'Available') {
                     soDetail.status = 'Available';
                 } else {
                     soDetail.status = 'Provisioning in progress';
